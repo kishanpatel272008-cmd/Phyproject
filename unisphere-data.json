@@ -9,6 +9,16 @@
       "course": "B.Tech Computer Engineering",
       "cgpa": 8.74,
       "attendance": 94
+    },
+    {
+      "id": "1234",
+      "name": "Kishan",
+      "password": "1234",
+      "role": "student",
+      "college": "LD College of Engineering",
+      "course": "B.Tech Computer Engineering",
+      "cgpa": 7.9,
+      "attendance": 89
     }
   ]
 }
