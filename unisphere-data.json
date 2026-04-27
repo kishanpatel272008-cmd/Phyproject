@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "id": "2023BCS045",
+      "name": "Dhaval Patel",
+      "password": "123456",
+      "role": "student",
+      "college": "LD College of Engineering",
+      "course": "B.Tech Computer Engineering",
+      "cgpa": 8.74,
+      "attendance": 94
+    }
+  ]
+}
