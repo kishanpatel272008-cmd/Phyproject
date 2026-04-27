@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniSphere - LD College Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #2563eb;
+      --indigo: #4f46e5;
+      --purple: #7c3aed;
+      --emerald: #059669;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #0f1117; color: #f0f0f0; min-height: 100vh; }
+    h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; }
+
+    /* GitHub Config Overlay */
+    #githubConfig {
+      background: rgba(15,17,23,0.98);
+      backdrop-filter: blur(20px);
+    }
+    .config-card {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      border-radius: 20px;
+    }
+    .config-input {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #f0f0f0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      width: 100%;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    .config-input:focus { border-color: #4f46e5; }
+    .config-input::placeholder { color: rgba(255,255,255,0.3); }
+
+    /* Auth Page */
+    #authPage { background: #0f1117; }
+    .auth-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 28px;
+      backdrop-filter: blur(20px);
+    }
+    .auth-header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #312e81 50%, #4c1d95 100%);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .role-btn {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #ccc;
+    }
+    .role-btn:hover { background: rgba(255,255,255,0.08); }
+    .role-btn.active { border-color: #4f46e5; background: rgba(79,70,229,0.15); color: #fff; }
+    .auth-input {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 14px 18px;
+      width: 100%;
+      color: #f0f0f0;
+      font-size: 15px;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.2s;
+    }
+    .auth-input:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,0.15); }
+    .auth-input::placeholder { color: rgba(255,255,255,0.25); }
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 24px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      font-family: 'Space Grotesk', sans-serif;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-emerald {
+      background: linear-gradient(135deg, #059669, #0d9488);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 24px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-size: 15px;
+      font-family: 'Space Grotesk', sans-serif;
+      transition: all 0.2s;
+    }
+    .btn-emerald:hover { opacity: 0.9; }
+
+    /* Dashboard */
+    #dashboard { background: #0f1117; min-height: 100vh; }
+    .dash-nav {
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(20px);
+    }
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+    .card:hover { border-color: rgba(255,255,255,0.14); background: rgba(255,255,255,0.06); }
+    .stat-val { font-family: 'Space Grotesk', sans-serif; font-size: 2.4rem; font-weight: 700; }
+    .id-card {
+      background: linear-gradient(135deg, #1e3a8a, #312e81, #4c1d95);
+      border-radius: 20px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .id-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+    .id-card::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -30px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: 12px 8px; color: rgba(255,255,255,0.4); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    td { padding: 14px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; color: rgba(255,255,255,0.8); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .grade-badge {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(5,150,105,0.15);
+      color: #34d399;
+      border: 1px solid rgba(52,211,153,0.2);
+    }
+    .sync-status {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+    .sync-ok { background: rgba(5,150,105,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
+    .sync-err { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.2); }
+    .sync-loading { background: rgba(234,179,8,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+
+    /* Modal */
+    .modal-bg { background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); }
+    .modal-card {
+      background: #1a1d27;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 460px;
+      width: 100%;
+    }
+
+    /* Spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 1s linear infinite; display: inline-block; }
+
+    /* Fade-in */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    .fade-up { animation: fadeUp 0.4s ease forwards; }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 24px; right: 24px;
+      padding: 14px 20px; border-radius: 14px;
+      font-size: 14px; font-weight: 500;
+      z-index: 9999; transition: all 0.3s;
+      pointer-events: none; opacity: 0;
+    }
+    #toast.show { opacity: 1; }
+    #toast.success { background: rgba(5,150,105,0.9); color: #ecfdf5; }
+    #toast.error { background: rgba(239,68,68,0.9); color: #fef2f2; }
+    #toast.info { background: rgba(79,70,229,0.9); color: #eef2ff; }
+
+    label { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 500; display: block; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ===== GITHUB CONFIG OVERLAY ===== -->
+<div id="githubConfig" class="fixed inset-0 flex items-center justify-center z-[200] p-4">
+  <div class="config-card max-w-lg w-full p-8 fade-up">
+    <div class="text-center mb-8">
+      <div class="text-5xl mb-3">🔗</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;">Connect GitHub Storage</h2>
+      <p style="color:rgba(255,255,255,0.4);font-size:14px;margin-top:6px;">UniSphere will store all user data permanently in your GitHub repository.</p>
+    </div>
+
+    <div style="background:rgba(79,70,229,0.1);border:1px solid rgba(79,70,229,0.25);border-radius:14px;padding:16px;margin-bottom:24px;font-size:13px;color:rgba(255,255,255,0.6);line-height:1.7;">
+      <b style="color:#a5b4fc;">Setup Steps:</b><br>
+      1. Create a <b style="color:#f0f0f0;">public or private GitHub repo</b> (e.g. <code style="background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:4px;">my-unisphere-db</code>)<br>
+      2. Generate a <b style="color:#f0f0f0;">Personal Access Token</b> with <code style="background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:4px;">repo</code> scope at github.com/settings/tokens<br>
+      3. Paste details below — the portal will auto-create the database file.
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div>
+        <label>GitHub Username</label>
+        <input id="cfgOwner" class="config-input" placeholder="e.g. dhaval2025" />
+      </div>
+      <div>
+        <label>Repository Name</label>
+        <input id="cfgRepo" class="config-input" placeholder="e.g. unisphere-db" />
+      </div>
+      <div>
+        <label>Personal Access Token (PAT)</label>
+        <div style="position:relative;">
+          <input id="cfgToken" type="password" class="config-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="padding-right:44px;" />
+          <button onclick="toggleCfgToken()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:14px;">
+            <i class="fas fa-eye" id="cfgEye"></i>
+          </button>
+        </div>
+      </div>
+      <div>
+        <label>File Path in Repo</label>
+        <input id="cfgFile" class="config-input" value="unisphere-data.json" placeholder="unisphere-data.json" />
+      </div>
+
+      <button onclick="saveGithubConfig()" class="btn-primary" style="margin-top:8px;">
+        <i class="fas fa-plug"></i> Connect & Initialize
+      </button>
+
+      <p style="text-align:center;font-size:12px;color:rgba(255,255,255,0.25);">
+        Config is saved in your browser's localStorage. Token never leaves your device.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AUTH PAGE ===== -->
+<div id="authPage" class="hidden min-h-screen flex items-center justify-center p-6">
+  <div class="auth-card max-w-md w-full p-8 fade-up">
+    <div class="auth-header">
+      <div style="font-size:60px;margin-bottom:12px;">🎓</div>
+      <h1 style="font-size:2rem;font-weight:700;color:#fff;">UniSphere</h1>
+      <p style="color:rgba(255,255,255,0.6);margin-top:6px;font-size:14px;">LD College of Engineering Portal</p>
+      <div id="syncIndicator" style="margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.4);">
+        <i class="fas fa-circle-dot" style="color:#34d399;"></i> Synced with GitHub
+      </div>
+    </div>
+
+    <!-- Role Select -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;">
+      <button onclick="selectRole('student')" id="roleStudent" class="role-btn active">
+        <i class="fas fa-user-graduate" style="font-size:24px;color:#818cf8;"></i>
+        <span style="font-size:13px;font-weight:600;">Student</span>
+      </button>
+      <button onclick="selectRole('faculty')" id="roleFaculty" class="role-btn">
+        <i class="fas fa-chalkboard-teacher" style="font-size:24px;color:#34d399;"></i>
+        <span style="font-size:13px;font-weight:600;">Faculty</span>
+      </button>
+      <button onclick="selectRole('admin')" id="roleAdmin" class="role-btn">
+        <i class="fas fa-shield-alt" style="font-size:24px;color:#a78bfa;"></i>
+        <span style="font-size:13px;font-weight:600;">Admin</span>
+      </button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:18px;">
+      <div>
+        <label id="idLabel">Student ID</label>
+        <input id="loginId" type="text" placeholder="e.g. 2023BCS045" class="auth-input" />
+      </div>
+      <div>
+        <label>Password</label>
+        <div style="position:relative;">
+          <input id="loginPass" type="password" placeholder="••••••••" class="auth-input" style="padding-right:44px;" />
+          <button onclick="togglePassword()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;">
+            <i class="fas fa-eye" id="loginEye"></i>
+          </button>
+        </div>
+      </div>
+      <button onclick="doLogin()" id="loginBtn" class="btn-primary">Login →</button>
+    </div>
+
+    <div style="border-top:1px solid rgba(255,255,255,0.07);margin-top:28px;padding-top:24px;">
+      <p style="text-align:center;color:rgba(255,255,255,0.35);font-size:13px;margin-bottom:12px;">New Student?</p>
+      <button onclick="showSignup()" class="btn-emerald">
+        <i class="fas fa-user-plus"></i> Sign Up as New Student
+      </button>
+    </div>
+
+    <p onclick="showGithubConfig()" style="text-align:center;font-size:11px;color:rgba(255,255,255,0.2);margin-top:16px;cursor:pointer;">
+      <i class="fab fa-github"></i> Reconfigure GitHub Storage
+    </p>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div id="dashboard" class="hidden">
+  <nav class="dash-nav">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="font-size:32px;">🎓</span>
+      <div>
+        <h1 style="font-size:1.25rem;font-weight:700;color:#fff;">UniSphere</h1>
+        <p id="campusName" style="font-size:11px;color:rgba(255,255,255,0.35);">LD College of Engineering, Ahmedabad</p>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div id="ghSyncBadge" class="sync-status sync-ok"><i class="fas fa-circle-check"></i> GitHub Synced</div>
+      <div style="text-align:right;">
+        <p id="userNameNav" style="font-weight:600;font-size:15px;color:#fff;"></p>
+        <p id="userIdNav" style="font-size:12px;color:rgba(255,255,255,0.4);"></p>
+      </div>
+      <button onclick="logout()" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#f87171;padding:10px 18px;border-radius:12px;cursor:pointer;font-size:13px;font-weight:500;transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'" onmouseout="this.style.background='rgba(239,68,68,0.1)'">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+  </nav>
+  <div class="max-w-7xl mx-auto p-6 lg:p-10 fade-up" id="dashboardContent"></div>
+</div>
+
+<!-- ===== SIGNUP MODAL ===== -->
+<div id="signupModal" class="hidden fixed inset-0 modal-bg flex items-center justify-center z-[100] p-4">
+  <div class="modal-card fade-up">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+      <h2 style="font-size:1.25rem;font-weight:700;">Create Student Account</h2>
+      <button onclick="hideSignup()" style="background:rgba(255,255,255,0.07);border:none;color:rgba(255,255,255,0.5);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:18px;">×</button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div><label>Full Name</label><input id="signupName" type="text" class="auth-input" /></div>
+      <div><label>Student ID</label><input id="signupId" type="text" placeholder="e.g. 2026BCS001" class="auth-input" /></div>
+      <div>
+        <label>College</label>
+        <select id="signupCollege" class="auth-input" style="cursor:pointer;">
+          <option value="LD College of Engineering">LD College of Engineering</option>
+          <option value="Ahmedabad University">Ahmedabad University</option>
+          <option value="Nirma University">Nirma University</option>
+          <option value="GTU Affiliate College">GTU Affiliate College</option>
+        </select>
+      </div>
+      <div><label>Password</label><input id="signupPass" type="password" class="auth-input" /></div>
+      <button onclick="doSignup()" class="btn-primary" id="signupBtn" style="margin-top:8px;">
+        <i class="fas fa-user-plus"></i> Create Account
+      </button>
+    </div>
+
+    <p onclick="hideSignup()" style="text-align:center;font-size:13px;color:#818cf8;margin-top:16px;cursor:pointer;">Already have account? Login</p>
+  </div>
+</div>
+
+<script>
+// ========== GITHUB CONFIG ==========
+let ghConfig = {};
+
+function loadConfig() {
+  const saved = localStorage.getItem('unisphere_gh_config');
+  if (saved) {
+    try { ghConfig = JSON.parse(saved); } catch(e) {}
+  }
+  return ghConfig && ghConfig.owner && ghConfig.repo && ghConfig.token;
+}
+
+function toggleCfgToken() {
+  const inp = document.getElementById('cfgToken');
+  const eye = document.getElementById('cfgEye');
+  if (inp.type === 'password') { inp.type = 'text'; eye.className = 'fas fa-eye-slash'; }
+  else { inp.type = 'password'; eye.className = 'fas fa-eye'; }
+}
+
+function showGithubConfig() {
+  document.getElementById('githubConfig').classList.remove('hidden');
+  document.getElementById('authPage').classList.add('hidden');
+  if (ghConfig.owner) document.getElementById('cfgOwner').value = ghConfig.owner || '';
+  if (ghConfig.repo) document.getElementById('cfgRepo').value = ghConfig.repo || '';
+  if (ghConfig.file) document.getElementById('cfgFile').value = ghConfig.file || 'unisphere-data.json';
+}
+
+async function saveGithubConfig() {
+  const owner = document.getElementById('cfgOwner').value.trim();
+  const repo = document.getElementById('cfgRepo').value.trim();
+  const token = document.getElementById('cfgToken').value.trim();
+  const file = document.getElementById('cfgFile').value.trim() || 'unisphere-data.json';
+
+  if (!owner || !repo || !token) { showToast('All fields required', 'error'); return; }
+
+  ghConfig = { owner, repo, token, file };
+  localStorage.setItem('unisphere_gh_config', JSON.stringify(ghConfig));
+
+  showToast('Connecting to GitHub...', 'info');
+
+  // Try to initialize the database file if it doesn't exist
+  const ok = await initGithubDB();
+  if (ok) {
+    showToast('GitHub connected! Loading...', 'success');
+    setTimeout(() => {
+      document.getElementById('githubConfig').classList.add('hidden');
+      document.getElementById('authPage').classList.remove('hidden');
+    }, 800);
+  }
+}
+
+// ========== GITHUB API ==========
+const SEED_USERS = [
+  { 
+    id: "2023BCS045", name: "Dhaval Patel", password: "123456", role: "student",
+    college: "LD College of Engineering", course: "B.Tech Computer Engineering",
+    cgpa: 8.74, attendance: 94
+  }
+];
+
+async function ghAPI(method, path, body) {
+  const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${ghConfig.file}`;
+  const headers = {
+    'Authorization': `token ${ghConfig.token}`,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json'
+  };
+  return fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined });
+}
+
+async function readGithubDB() {
+  try {
+    const res = await ghAPI('GET');
+    if (!res.ok) return null;
+    const json = await res.json();
+    const decoded = atob(json.content.replace(/\n/g, ''));
+    return { data: JSON.parse(decoded), sha: json.sha };
+  } catch(e) {
+    return null;
+  }
+}
+
+async function writeGithubDB(data, sha) {
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+  const body = {
+    message: `UniSphere data update — ${new Date().toISOString()}`,
+    content,
+    ...(sha ? { sha } : {})
+  };
+  try {
+    const res = await ghAPI('PUT', null, body);
+    return res.ok;
+  } catch(e) {
+    return false;
+  }
+}
+
+async function initGithubDB() {
+  const existing = await readGithubDB();
+  if (existing) {
+    showToast('Existing database found ✓', 'success');
+    return true;
+  }
+  // Create new
+  const initData = { users: SEED_USERS };
+  const ok = await writeGithubDB(initData, null);
+  if (ok) { showToast('Database created on GitHub ✓', 'success'); return true; }
+  else { showToast('Failed to create DB. Check token/repo permissions.', 'error'); return false; }
+}
+
+// ========== STATE ==========
+let dbCache = null;
+let dbSha = null;
+let currentUser = null;
+let currentRole = 'student';
+
+const firstYearSubjects = [
+  { name: "Mathematics - I", internal: 28, external: 62, total: 90, grade: "A" },
+  { name: "Physics", internal: 25, external: 58, total: 83, grade: "B+" },
+  { name: "Basic Electrical Engineering", internal: 30, external: 65, total: 95, grade: "A+" },
+  { name: "Engineering Graphics & Design", internal: 27, external: 60, total: 87, grade: "A" },
+  { name: "Communication Skills", internal: 22, external: 55, total: 77, grade: "B" },
+  { name: "Programming for Problem Solving", internal: 29, external: 61, total: 90, grade: "A+" }
+];
+
+async function loadDB() {
+  setBadge('loading');
+  const result = await readGithubDB();
+  if (result) {
+    dbCache = result.data;
+    dbSha = result.sha;
+    setBadge('ok');
+    return true;
+  }
+  setBadge('err');
+  return false;
+}
+
+async function saveDB() {
+  if (!dbCache) return false;
+  setBadge('loading');
+  const ok = await writeGithubDB(dbCache, dbSha);
+  if (ok) {
+    // Refresh sha
+    const r = await readGithubDB();
+    if (r) { dbSha = r.sha; }
+    setBadge('ok');
+  } else {
+    setBadge('err');
+    showToast('Failed to sync to GitHub!', 'error');
+  }
+  return ok;
+}
+
+function setBadge(state) {
+  const b = document.getElementById('ghSyncBadge');
+  if (!b) return;
+  if (state === 'ok') { b.className = 'sync-status sync-ok'; b.innerHTML = '<i class="fas fa-circle-check"></i> GitHub Synced'; }
+  else if (state === 'err') { b.className = 'sync-status sync-err'; b.innerHTML = '<i class="fas fa-circle-xmark"></i> Sync Error'; }
+  else { b.className = 'sync-status sync-loading'; b.innerHTML = '<span class="spin"><i class="fas fa-circle-notch"></i></span> Syncing...'; }
+}
+
+// ========== AUTH ==========
+function selectRole(role) {
+  currentRole = role;
+  ['student','faculty','admin'].forEach(r => {
+    const btn = document.getElementById(`role${r.charAt(0).toUpperCase()+r.slice(1)}`);
+    btn.classList.toggle('active', r === role);
+  });
+  document.getElementById('idLabel').textContent = role === 'student' ? 'Student ID' : role === 'faculty' ? 'Faculty ID' : 'Admin ID';
+}
+
+function togglePassword() {
+  const inp = document.getElementById('loginPass');
+  const eye = document.getElementById('loginEye');
+  if (inp.type === 'password') { inp.type = 'text'; eye.className = 'fas fa-eye-slash'; }
+  else { inp.type = 'password'; eye.className = 'fas fa-eye'; }
+}
+
+async function doLogin() {
+  const id = document.getElementById('loginId').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  const btn = document.getElementById('loginBtn');
+  if (!id || !pass) { showToast('Please enter ID and Password', 'error'); return; }
+
+  btn.innerHTML = '<span class="spin"><i class="fas fa-circle-notch"></i></span> Signing in...';
+  btn.disabled = true;
+
+  await loadDB();
+  const users = (dbCache && dbCache.users) || [];
+  const user = users.find(u => u.id === id && u.password === pass && u.role === currentRole);
+
+  if (!user) {
+    showToast('Invalid credentials or wrong role', 'error');
+    btn.innerHTML = 'Login →';
+    btn.disabled = false;
+    return;
+  }
+
+  currentUser = user;
+  document.getElementById('authPage').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  loadStudentDashboard(user);
+}
+
+function showSignup() { document.getElementById('signupModal').classList.remove('hidden'); }
+function hideSignup() { document.getElementById('signupModal').classList.add('hidden'); }
+
+async function doSignup() {
+  const name = document.getElementById('signupName').value.trim();
+  const id = document.getElementById('signupId').value.trim();
+  const college = document.getElementById('signupCollege').value;
+  const pass = document.getElementById('signupPass').value.trim();
+  const btn = document.getElementById('signupBtn');
+
+  if (!name || !id || !pass) { showToast('All fields are required', 'error'); return; }
+
+  btn.innerHTML = '<span class="spin"><i class="fas fa-circle-notch"></i></span> Creating...';
+  btn.disabled = true;
+
+  await loadDB();
+  if (!dbCache) { dbCache = { users: [...SEED_USERS] }; }
+
+  if (dbCache.users.some(u => u.id === id)) {
+    showToast('Student ID already exists!', 'error');
+    btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+    btn.disabled = false;
+    return;
+  }
+
+  const newUser = { id, name, password: pass, role: 'student', college, course: 'B.Tech Computer Engineering', cgpa: 7.9, attendance: 89 };
+  dbCache.users.push(newUser);
+
+  const ok = await saveDB();
+  if (ok) {
+    showToast(`Account created! ID: ${id}`, 'success');
+    hideSignup();
+  } else {
+    showToast('Account created locally, but GitHub sync failed.', 'error');
+    hideSignup();
+  }
+
+  btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+  btn.disabled = false;
+}
+
+// ========== DASHBOARD ==========
+function loadStudentDashboard(user) {
+  document.getElementById('userNameNav').textContent = user.name;
+  document.getElementById('userIdNav').textContent = user.id;
+  document.getElementById('campusName').textContent = user.college + ', Ahmedabad';
+
+  const c = document.getElementById('dashboardContent');
+  c.innerHTML = `
+    <div style="margin-bottom:32px;">
+      <h1 style="font-size:2rem;font-weight:700;color:#fff;">Welcome back, ${user.name.split(' ')[0]} 👋</h1>
+      <p style="color:rgba(255,255,255,0.4);margin-top:4px;">${user.course} • ${user.college}</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;" class="dash-grid">
+
+      <!-- Left -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <!-- ID Card -->
+        <div class="id-card">
+          <div style="position:relative;z-index:1;">
+            <p style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.08em;">Student ID Card</p>
+            <h2 style="font-size:1.5rem;font-weight:700;color:#fff;margin-top:10px;">${user.name}</h2>
+            <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:2px;">${user.id}</p>
+            <p style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;">${user.college}</p>
+          </div>
+          <div style="position:absolute;top:24px;right:28px;font-size:48px;z-index:1;">👨‍🎓</div>
+          <button onclick="showToast('ID Card downloaded!','success')" style="margin-top:24px;width:100%;padding:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(255,255,255,0.7);cursor:pointer;font-size:13px;font-weight:500;position:relative;z-index:1;">
+            <i class="fas fa-download"></i> Download ID Card
+          </button>
+        </div>
+
+        <!-- Fees -->
+        <div class="card">
+          <h3 style="font-weight:600;color:#fff;margin-bottom:16px;">Fees Status</h3>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:13px;color:rgba(255,255,255,0.5);">Tuition Fee</span>
+              <span style="font-size:13px;font-weight:600;color:#34d399;">₹1,25,000 Paid</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:13px;color:rgba(255,255,255,0.5);">Exam Fees (Spring 2026)</span>
+              <span style="font-size:13px;font-weight:600;color:#fbbf24;">₹4,200 Due</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attendance -->
+        <div class="card" style="text-align:center;">
+          <h3 style="font-weight:600;color:#fff;margin-bottom:12px;">Attendance</h3>
+          <div class="stat-val" style="color:#34d399;">${user.attendance}%</div>
+          <div style="height:8px;background:rgba(255,255,255,0.07);border-radius:999px;margin-top:12px;overflow:hidden;">
+            <div style="height:100%;width:${user.attendance}%;background:linear-gradient(90deg,#059669,#34d399);border-radius:999px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <!-- Stats Row -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <div class="card" style="text-align:center;">
+            <p style="font-size:12px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.06em;">CGPA</p>
+            <div class="stat-val" style="color:#818cf8;margin-top:6px;">${user.cgpa}</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <p style="font-size:12px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.06em;">Semester</p>
+            <div class="stat-val" style="color:#a78bfa;margin-top:6px;">2</div>
+          </div>
+          <div class="card" style="text-align:center;">
+            <p style="font-size:12px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.06em;">Year</p>
+            <div class="stat-val" style="color:#34d399;margin-top:6px;">2nd</div>
+          </div>
+        </div>
+
+        <!-- Subjects -->
+        <div class="card">
+          <h3 style="font-weight:600;color:#fff;margin-bottom:20px;">Current Semester Subjects</h3>
+          <table>
+            <thead><tr>
+              <th>Subject</th>
+              <th style="text-align:center;">Internal</th>
+              <th style="text-align:center;">External</th>
+              <th style="text-align:center;">Total</th>
+              <th style="text-align:center;">Grade</th>
+            </tr></thead>
+            <tbody>
+              ${firstYearSubjects.map(s => `
+                <tr>
+                  <td style="font-weight:500;color:rgba(255,255,255,0.9);">${s.name}</td>
+                  <td style="text-align:center;">${s.internal}</td>
+                  <td style="text-align:center;">${s.external}</td>
+                  <td style="text-align:center;font-weight:600;color:#fff;">${s.total}</td>
+                  <td style="text-align:center;"><span class="grade-badge">${s.grade}</span></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Degree Details -->
+        <div class="card">
+          <h3 style="font-weight:600;color:#fff;margin-bottom:20px;">Degree & Course Details</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            ${[['Degree','B.Tech'],['Branch',user.course],['College',user.college],['Affiliation','GTU']].map(([k,v])=>`
+              <div>
+                <p style="font-size:11px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">${k}</p>
+                <p style="font-weight:600;color:#fff;font-size:14px;">${v}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      @media(max-width:768px){.dash-grid{grid-template-columns:1fr!important;}}
+    </style>
+  `;
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('authPage').classList.remove('hidden');
+  document.getElementById('loginId').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+// ========== TOAST ==========
+let toastTimer;
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast');
+  t.className = `show ${type}`;
+  t.textContent = msg;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = ''; }, 3000);
+}
+
+// ========== INIT ==========
+window.onload = () => {
+  selectRole('student');
+  if (loadConfig()) {
+    document.getElementById('githubConfig').classList.add('hidden');
+    document.getElementById('authPage').classList.remove('hidden');
+    // Pre-load DB silently
+    loadDB().then(ok => {
+      if (!ok) showToast('Could not reach GitHub DB. Check config.', 'error');
+    });
+  } else {
+    // Show config screen
+  }
+};
+</script>
+</body>
+</html>
